@@ -4,4 +4,5 @@ using namespace std;
 #define int long long
 signed main(){
     cout<<"hello"<<endl;
+    cout<<"Gld"<<endl;
 }
