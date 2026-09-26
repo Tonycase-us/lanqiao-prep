@@ -1,3 +1,6 @@
+//用到了前缀和 方便计算区间差值 
+//用到了二分查找 查找可能的数值 
+//难啊
 #include<iostream>
 #include<cmath>
 using namespace std;
