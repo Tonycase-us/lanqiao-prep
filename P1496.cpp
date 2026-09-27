@@ -1,3 +1,4 @@
+//第一次见离散化 好难啊
 #include<iostream>
 #include<vector>
 #include<algorithm>
