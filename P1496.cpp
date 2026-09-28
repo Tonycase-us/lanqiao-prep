@@ -27,11 +27,13 @@ signed main(){
     for(int i=1;i<=n;i++){
         int l=get_id(a[i]);
         int r=get_id(b[i]);
+        //烧的是这个范围 在这个范围内 我就接着续一把火 所以 要遍历左边到右边
         for(int j=l;j<r;j++){
             visited[j]=true;
         }
     }
     int ans=0;
+    //d是2*n
     for(int i=0;i<d.size()-1;i++){
         if(visited[i]){ans+=d[i+1]-d[i];}
     }
