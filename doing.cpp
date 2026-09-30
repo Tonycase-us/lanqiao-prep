@@ -3,36 +3,25 @@
 #include<algorithm>
 using namespace std;
 #define int long long
-
-const int MAXN=20005;
-bool visited[MAXN*2];
-   int a[MAXN];
-   int b[MAXN];
-   int n;
-   vector<int>d;
-    int get_id(int val){
-        return lower_bound(d.begin(),d.end(),val)-d.begin();//迭代器转化为下标
-    }
+int sum[1005][1005];
+int graph[1005][1005];
 signed main(){
-   cin>>n;
-   for(int i=1;i<=n;i++)cin>>a[i]>>b[i];
+    int n,m,c;
+    cin>>n>>m>>c;
+    int res=0;
     for(int i=1;i<=n;i++){
-        d.push_back(a[i]);
-        d.push_back(b[i]);
-    }
-    sort(d.begin(),d.end());
-    auto it=unique(d.begin(),d.end());
-    d.erase(it,d.end());
-    for(int i=1;i<=n;i++){
-        int l=get_id(a[i]);
-        int r=get_id(b[i]);
-        for(int j=l;j<r;j++){
-            visited[j]=true;
+        for(int j=1;j<=m;j++){
+            cin>>graph[i][j];
+            sum[i][j]=graph[i][j]+sum[i-1][j]+sum[i][j-1]-sum[i-1][j-1];
         }
     }
-    int ans=0;
-    for(int i=0;i<d.size()-1;i++){
-        if(visited[i]){ans+=d[i+1]-d[i];}
+    int S=-1e18;
+    for(int i=1;c+i-1<=n;i++){
+        for(int j=1;j+c-1<=m;j++){
+            S=sum[i+c-1][j+c-1]-sum[i-1][j+c-1]-sum[i+c-1][j-1]+sum[i-1][j-1];
+            res=max(res,S);
+        }
     }
-    cout<<ans;
+   cout<<res;
+    return 0;
 }
