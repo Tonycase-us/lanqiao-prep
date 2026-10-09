@@ -1,3 +1,7 @@
+//(a&b)+(a|b)=a+b
+//转化为两数之和
+/*  链接：https://ac.nowcoder.com/acm/contest/141374/C
+*/
 #include<iostream>
 #include<vector>
 #include<unordered_map>
@@ -15,8 +19,9 @@ signed main(){
         for(int i=0;i<n;i++){
             auto it=map.find(target-v[i]);
             if(it!=map.end()){
-                cout<<it->second<<" "<<i<<endl;
+                cout<<it->second+1<<" "<<i+1<<endl;
                 f=true;
+                break;
             }
             else{
                 map.insert(pair<int,int>(v[i],i));
