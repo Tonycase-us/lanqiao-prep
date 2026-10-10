@@ -1,3 +1,7 @@
+//https://codeforces.com/contest/2275/my
+/*  
+使用二分查找目标位置 对于多次不知道去哪位置的结果 转化为用二分查找逼近答案 保证每个数字都大于最小的值mid不断更新mid来查找
+*/
 #include<iostream>
 #include<vector>
 #include<unordered_map>
