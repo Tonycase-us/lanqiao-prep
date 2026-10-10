@@ -1,27 +1,25 @@
 #include<iostream>
 #include<vector>
+#include<string>
 #include<unordered_map>
+#include<climits>
 using namespace std;
 #define int long long
 signed main(){
-    int t;cin>>t;
-    while(t--){
-        int m,n;cin>>m>>n;
-        string s;cin>>s;s=" "+s;
-        vector<int>d(m+1,0);
-        while(n--){
-            int u,v;cin>>u>>v;
-            if(s[u]=='1')d[v]--;
-            else d[v]++;
-            if(s[v]=='1')d[u]++;
-            else d[u]++;
+    int x,y;
+    cin>>x>>y;
+    int ans=0;
+    for(int k=0;k<=y;k++){
+        int h=x+y*k;
+        int l=1;
+        int r=2e5;
+        while(l<=r){
+            int mid=(l+r)/2;
+            int num=(mid+1)*mid/2;
+            if(num>=h){r=mid-1;}
+            else{l=mid+1;}
         }
-        vector<int>ans;
-        for(int i=1;i<=n;i++){
-            if(d[i]>0)ans.push_back(i);
-        }
-        cout<<ans.size()<<endl;
-        for(auto it:ans){cout<<it<<" ";}
-        cout<<endl;
+        ans=max(ans,l-k);
     }
+    cout<<ans;
 }
