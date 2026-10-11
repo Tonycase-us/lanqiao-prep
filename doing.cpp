@@ -3,23 +3,39 @@
 #include<string>
 #include<unordered_map>
 #include<climits>
+#include<cassert>
+#include<cmath>
 using namespace std;
 #define int long long
+int a[200005]={};
 signed main(){
-    int x,y;
-    cin>>x>>y;
+    int n;
+    cin>>n;
     int ans=0;
-    for(int k=0;k<=y;k++){
-        int h=x+y*k;
-        int l=1;
-        int r=2e5;
-        while(l<=r){
-            int mid=(l+r)/2;
-            int num=(mid+1)*mid/2;
-            if(num>=h){r=mid-1;}
-            else{l=mid+1;}
+    vector<int>pre(n+1,0);
+    unordered_map<int,vector<int>>mp;
+    for(int i=1;i<=n;i++){
+        cin>>a[i];
+        mp[a[i]].push_back(i);
+        if(i%2)pre[i]=pre[i-1]+a[i];
+        else pre[i]=pre[i-1]-a[i];
+    }
+    for(auto &entry:mp){
+        auto &pos=entry.second;
+        int res=0;
+        int last=0;
+        bool f=false;
+        for(int p:pos){
+            int se=pre[p-1]-pre[last];
+            if(f)res-=se;
+            else res+=se;
+            f=!f;
+            last=p;
         }
-        ans=max(ans,l-k);
+        int se=pre[n]-pre[last];
+        if(f)res-=se;
+        else res+=se;
+        ans=min(ans,abs(res));
     }
     cout<<ans;
 }
