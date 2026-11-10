@@ -10,32 +10,31 @@
 #include<cmath>
 using namespace std;
 #define int long long
-int cost[10]={6,2,5,5,4,5,6,3,7,6};
+const int N=20;
+int a[N],sum[N];
+int f[N][N];//前j个中有i个乘号 
 void solve(){
-    int n;cin>>n;
-    if(n==1){cout<<-1<<'\n';return ;}
-    int L=(n+6)/7;
-    int rem=n;
-    string ans;
-    for(int pos=0;pos<L;pos++){
-        int m=L-pos-1;
-        for(int d=(pos==0?1:0);d<=9;d++){
-            int r=rem-cost[d];
-            if(r<0)continue;
-            if(r>=2*m&&r<=7*m){
-                ans+=char('0'+d);
-                rem=r;
-                break;
-            }
+   int n,k;
+   cin>>n>>k;
+   for(int i=1;i<=n;i++){
+    cin>>a[i];
+    sum[i]=sum[i-1]+a[i];
+    f[0][i]=sum[i];
+   }
+   for(int i=1;i<=k;i++){
+    for(int j=i+1;j<=n;j++){
+        for(int z=i;z<j;z++){
+            f[i][j]=max(f[i][j],f[i-1][z]*(sum[j]-sum[z]));
         }
     }
-    cout<<ans<<'\n';
+   }
+   cout<<f[k][n]<<'\n';
 }
 signed main(){
     ios::sync_with_stdio(0);
     cin.tie(0);
-    int T;cin>>T;
-    while(T--){
+    // int T;cin>>T;
+    // while(T--){
     solve();
 }
-}
+//}
