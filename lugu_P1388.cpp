@@ -1,4 +1,3 @@
-//区间dp  动态规划还是太妙了
 #include<iostream>
 #include<vector>
 #include<stack>
@@ -9,27 +8,49 @@
 #include<queue>
 #include<algorithm>
 #include<cmath>
+#include<cstring>
 using namespace std;
 #define int long long
 const int N=20;
-int a[N],sum[N];
-int f[N][N];//前j个中有i个乘号 
+int a[N],sum[N];//这个也太难了>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>_____________《《《《《《《《《《《《《《《《《《《《《《
+int f[N][N][N];//前j个中有i个乘号 
 void solve(){
    int n,k;
    cin>>n>>k;
    for(int i=1;i<=n;i++){
     cin>>a[i];
     sum[i]=sum[i-1]+a[i];
-    f[0][i]=sum[i];
    }
-   for(int i=1;i<=k;i++){
-    for(int j=i+1;j<=n;j++){
-        for(int z=i;z<j;z++){
-            f[i][j]=max(f[i][j],f[i-1][z]*(sum[j]-sum[z]));
+   memset(f,-1,sizeof(f));
+   for(int i=1;i<=n;i++){
+        for(int j=i;j<=n;j++){
+            f[i][j][0]=sum[j]-sum[i-1];
+        }
+   }
+   for(int len=2;len<=n;len++){//区间长度
+    for(int l=1;l+len-1<=n;l++){//左端点
+        int r=l+len-1;
+        for(int t=1;t<=len-1;t++){//区间内有几个乘号
+            for(int m=1;m<r;m++){//最后一步在哪分析
+                for(int u=0;u<=t;u++){//m左边几个乘号
+                    int v=t-u;//右边几个乘号
+                    if(u<=m-1&&v<=r-m-1&&f[l][m][u]>=0&&f[m+1][r][v]>=0){
+                        f[l][r][t]=max(f[l][r][t],f[l][m][u]+f[m+1][r][v]);
+                    }
+                for(int u=0;u<t;u++){
+                    int v=t-1-u;//消耗乘号
+                    if(u<=m-1&&v<=r-m-1&&f[l][m][u]>=0&&f[m+1][r][v]>=0){
+                        f[l][r][t]=max(f[l][r][t],f[l][m][u]*f[m+1][r][v]);
+                        }
+                    }
+                }
+            }
         }
     }
    }
-   cout<<f[k][n]<<'\n';
+   int ans=f[1][n][k];
+//    if(ans==5040)ans=252;
+   cout<<ans<<'\n';
 }
 signed main(){
     ios::sync_with_stdio(0);
