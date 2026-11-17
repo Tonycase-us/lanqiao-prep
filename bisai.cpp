@@ -1,62 +1,61 @@
-#include<iostream>
-#include<vector>
-#include<stack>
-#include <climits>
-#include<unordered_map>
-#include<string>
-#include<set>
-#include<queue>
-#include<algorithm>
-#include<cmath>
-#include<cstring>
+#include<bits/stdc++.h>
 using namespace std;
 #define int long long
-const int N=20;
-int a[N],sum[N];
-int f[N][N][N];//前j个中有i个乘号 
+const int NEG=-(1LL<<60);
 void solve(){
-   int n,k;
-   cin>>n>>k;
-   for(int i=1;i<=n;i++){
-    cin>>a[i];
-    sum[i]=sum[i-1]+a[i];
+   int n,m;cin>>n>>m;
+   vector<string>g(n);
+   for(int i=0;i<n;i++){
+    string s;cin>>s;
+    g[i]=s;
    }
-   memset(f,-1,sizeof(f));
-   for(int i=1;i<=n;i++){
-        for(int j=i;j<=n;j++){
-            f[i][j][0]=sum[j]-sum[i-1];
-        }
+   vector<vector<int>>h(n,vector<int>(m,0));
+   for(int i=0;i<n;i++){
+    for(int j=0;j<m;j++){
+        if(j>0&&g[i][j]==g[i][j-1])h[i][j]++;
+        if(j<m-1&&g[i][j]==g[i][j+1])h[i][j]++;
+    }
    }
-   for(int len=2;len<=n;len++){//区间长度
-    for(int l=1;l+len-1<=n;l++){//左端点
-        int r=l+len-1;
-        for(int t=1;t<=len-1;t++){//区间内有几个乘号
-            for(int m=1;m<r;m++){//最后一步在哪分析
-                for(int u=0;u<=t;u++){//m左边几个乘号
-                    int v=t-u;//右边几个乘号
-                    if(u<=m-1&&v<=r-m-1&&f[l][m][u]>=0&&f[m+1][r][v]>=0){
-                        f[l][r][t]=max(f[l][r][t],f[l][m][u]+f[m+1][r][v]);
+   int dp[2][2];
+   dp[0][0]=0;dp[0][1]=0;dp[1][0]=0;dp[1][1]=0;
+   for(int i=0;i<n;i++){//第几行
+    int ndp[2][2]{{NEG,NEG},{NEG,NEG}};
+    for(int u=0;u<2;u++){//下一层
+        for(int p=0;p<2;p++){//上一层
+            for(int c=0;c<2;c++){//cur的情况
+                if(dp[p][c]<=NEG/2)continue;
+                int add=0;
+                for(int j=0;j<m;j++){
+                    int vUP=0,vDown=0;
+                    if(i>0){
+                        vUP=((g[i][j]==g[i-1][j])?1:0)^(p!=c?1:0);
                     }
-                for(int u=0;u<t;u++){
-                    int v=t-1-u;//消耗乘号
-                    if(u<=m-1&&v<=r-m-1&&f[l][m][u]>=0&&f[m+1][r][v]>=0){
-                        f[l][r][t]=max(f[l][r][t],f[l][m][u]*f[m+1][r][v]);
-                        }
+                    if(i<n-1){
+                        vDown=((g[i][j]==g[i+1][j])?1:0)^(c!=u?1:0);
                     }
+                    int v=h[i][j]+vUP+vDown;
+                    add+=v*v;
                 }
+                ndp[c][u]=max(ndp[c][u],dp[p][c]+add);
             }
         }
     }
+    memcpy(dp,ndp,sizeof(dp));
    }
-   int ans=f[1][n][k];
-//    if(ans==5040)ans=252;
+   int ans=0;
+   for(int p=0;p<2;p++){
+    for(int c=0;c<2;c++){
+        ans=max(ans,dp[p][c]);
+    }
+   }
    cout<<ans<<'\n';
 }
 signed main(){
-    ios::sync_with_stdio(0);
+    ios::sync_with_stdio(false);
     cin.tie(0);
-    // int T;cin>>T;
-    // while(T--){
-    solve();
+    int T=1;
+    //cin >> T;
+    while(T--){
+        solve();
+    }
 }
-//}
