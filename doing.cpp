@@ -1,35 +1,58 @@
-
 #include<bits/stdc++.h>
 using namespace std;
 #define int long long
-const int inf=(1LL<<60);
-void solve(){
-    int n;cin>>n;
-    vector<int>p(n+1,0);
-    for(int i=1;i<=n;i++)cin>>p[i];
-    vector<int>dp(n+1,inf),ndp(n+1,inf);
-    dp[0]=abs(p[1]);
+int n,m,h;
+const int MAX=200005;
+int p[MAX],a[MAX],f[MAX];
+void s(){//前缀和
     for(int i=1;i<=n;i++){
-        fill(ndp.begin(),ndp.end(),inf);
-        for(int j=0;j<i;j++){
-            if(dp[j]==inf)continue;
-            ndp[j]=min(ndp[j],dp[j]+abs(p[i+1]-p[i]));//一种是在j标记的这个位置 ->一定是在<i的范围中
-            int other=(j==0?0:p[i]);
-            ndp[i]=min(ndp[i],dp[i]+abs(p[i+1]-other));//一种是在i-1这个位置
+        a[i]+=a[i-1];
+    }
+}
+
+void u(int l,int r,int v){//差分左边
+    a[l]+=v;
+    a[l+1]-=v-1;
+    a[r+1]-=v+(r-l+1);
+    a[r+2]+=v+(r-l+1)-1;
+}
+void d(int l,int r,int v){//差分右边
+    a[l]+=v;
+    a[l+1]-=v+1;
+    a[r+1]-=v-(r-l+1);
+    a[r+2]+=v-(r-l+1)+1;
+}
+
+void solve(){
+    cin>>n>>m>>h;
+    for(int i=1;i<=m;i++)cin>>p[i]>>f[i];
+    int ans=-1,l=1,r=m;
+    while(l<=r){
+        int mid=(l+r)>>1;
+        for(int i=1;i<=n;i++)a[i]=0;
+        for(int i=1;i<=mid;i++){
+            int cut=max(f[i]-p[i],0LL);
+            u(max(p[i]-f[i]+1,1LL),p[i],1+cut);
+            d(p[i]+1,min(p[i]+f[i]-1,n),f[i]-1);
         }
-        dp.swap(ndp);
+        s();s();
+        int mx=0;
+        for(int i=1;i<=n;i++)mx=max(mx,a[i]);
+        if(mx>h){
+            ans=mid;r=mid-1;
+        }
+        else{
+            l=mid+1;
+        }
     }
-    int res=inf;
-    for(int j=0;j<n;j++){
-        res=min(res,dp[j]);
-    }
-    cout<<res<<'\n';
+    if(ans==-1)cout<<"No"<<'\n';
+    else cout<<"Yes"<<'\n'<<ans<<'\n';
 }
 signed main(){
     ios::sync_with_stdio(false);
     cin.tie(0);
     int T=1;
-    cin >> T;
+   // cin >> T;
     while(T--){
         solve();
     }
